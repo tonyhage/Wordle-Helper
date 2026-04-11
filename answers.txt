@@ -114,6 +114,7 @@ arden
 ardor
 arena
 arent
+argon
 argue
 argus
 arise
@@ -738,6 +739,7 @@ eclat
 eddie
 edict
 edith
+educe
 edwin
 eerie
 egret
@@ -806,6 +808,7 @@ expat
 expel
 extol
 extra
+exude
 exult
 fable
 facet
@@ -1681,6 +1684,7 @@ pesos
 pesto
 petal
 petit
+petri
 petty
 phase
 phone
@@ -1758,6 +1762,7 @@ prick
 pride
 prima
 prime
+primo
 print
 prior
 prism
@@ -1872,6 +1877,7 @@ reset
 resin
 retch
 retro
+retry
 reuse
 revel
 revue
@@ -2599,6 +2605,7 @@ voter
 vouch
 vowel
 vying
+wacko
 wacky
 wafer
 wager
