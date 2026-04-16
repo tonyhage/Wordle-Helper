@@ -996,6 +996,7 @@ gusto
 gusty
 gypsy
 habit
+hacky
 haiku
 hairy
 halal
@@ -1285,7 +1286,6 @@ match
 mater
 matey
 mauve
-maxim
 maybe
 mayor
 mealy
@@ -1496,6 +1496,7 @@ pence
 penis
 penne
 penny
+peony
 perch
 peril
 perky
@@ -1585,6 +1586,7 @@ prism
 privy
 prize
 probe
+prole
 promo
 prone
 prong
@@ -2262,7 +2264,6 @@ trick
 trike
 trill
 tripe
-trish
 trite
 troll
 troop

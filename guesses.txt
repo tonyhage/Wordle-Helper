@@ -1217,6 +1217,7 @@ gusty
 gypsy
 habit
 hacks
+hacky
 haiku
 hails
 hairs
@@ -1607,7 +1608,6 @@ mater
 mates
 matey
 mauve
-maxim
 maybe
 mayor
 meals
@@ -1874,6 +1874,7 @@ pence
 penis
 penne
 penny
+peony
 perch
 peril
 perks
@@ -1986,6 +1987,7 @@ prism
 privy
 prize
 probe
+prole
 promo
 prone
 prong
@@ -2780,7 +2782,6 @@ trike
 trill
 tripe
 trips
-trish
 trite
 troll
 troop
