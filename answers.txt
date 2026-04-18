@@ -534,6 +534,7 @@ crust
 crypt
 cuban
 cubic
+cubit
 culpa
 cumin
 cuomo
@@ -1123,6 +1124,7 @@ joint
 joker
 jolly
 joust
+jowly
 judge
 juice
 juicy
@@ -2219,6 +2221,7 @@ tithe
 title
 titus
 tizzy
+toady
 toast
 today
 toddy
