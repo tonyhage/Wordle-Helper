@@ -708,7 +708,6 @@ diets
 digit
 dilly
 dimly
-dinah
 diner
 dingo
 dingy
@@ -1210,6 +1209,7 @@ gulch
 gully
 gumbo
 gummy
+gunky
 gunny
 guppy
 gusto
@@ -1402,6 +1402,7 @@ juicy
 jumbo
 jumps
 jumpy
+junky
 junta
 junto
 juror
@@ -1858,6 +1859,7 @@ patch
 paths
 patio
 patsy
+patty
 pause
 paved
 payee
@@ -1887,6 +1889,7 @@ pesto
 petal
 petri
 petty
+phage
 phase
 phone
 phony

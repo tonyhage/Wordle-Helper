@@ -227,6 +227,40 @@
 
 
 
+        .possible-solutions {
+            margin-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+        }
+
+        .possible-solutions h2 {
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .solutions-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .solution-word {
+            background: #fff;
+            border: 1px solid #d3d6da;
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .solution-word:active { background: #e8e8e8; }
+
         #debugOutput { display: none !important; }
     </style>
 </head>
@@ -282,6 +316,10 @@
                 <h2>Best Next Guesses:</h2>
                 <div id="suggestionsList"></div>
                 <div class="remaining-count" id="remainingCount"></div>
+                <div class="possible-solutions" id="possibleSolutions" style="display:none;">
+                    <h2>Possible Solutions:</h2>
+                    <div class="solutions-grid" id="solutionsList"></div>
+                </div>
             </div>
             
             <div id="debugOutput"></div>
@@ -557,6 +595,30 @@
 
             remainingCount.textContent = `${possibleWords.length} possible word${possibleWords.length === 1 ? '' : 's'} remaining`;
             suggestions.classList.add('show');
+
+            // Show all possible solutions below the top 5
+            const possibleSolutions = document.getElementById('possibleSolutions');
+            const solutionsList = document.getElementById('solutionsList');
+            if (possibleWords.length > 0) {
+                solutionsList.innerHTML = possibleWords.sort().map(word => 
+                    `<span class="solution-word" data-word="${word}">${word}</span>`
+                ).join('');
+                solutionsList.querySelectorAll('.solution-word').forEach(item => {
+                    item.addEventListener('click', () => {
+                        for (let i = 0; i < currentTile; i++) {
+                            const tile = document.querySelector(`.tile[data-row="${currentRow}"][data-col="${i}"]`);
+                            if (tile) { tile.textContent = ''; tile.classList.remove('filled', 'absent'); }
+                        }
+                        currentGuess = '';
+                        currentTile = 0;
+                        for (let letter of item.dataset.word.toUpperCase()) handleKeyPress(letter);
+                        if (currentTile === 5) submitGuess();
+                    });
+                });
+                possibleSolutions.style.display = 'block';
+            } else {
+                possibleSolutions.style.display = 'none';
+            }
         }
 
         function filterWords(words, guesses) {
