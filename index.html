@@ -269,7 +269,7 @@
         <div class="board" id="board"></div>
         <div class="reset-col">
             <button class="reset-btn" id="resetBtn">Reset Puzzle</button>
-            <span class="last-updated">Updated 04/25/26 11:15am</span>
+            <span class="last-updated">Updated 04/25/26 11:37am</span>
         </div>
     </div>
 
@@ -570,10 +570,12 @@
 
             suggestionsList.innerHTML = bestWords.map(({word, score}) => {
                 const bits = (score / 100).toFixed(2);
+                const worstCase = possibleWords.length <= 20 ? getWorstCase(word, possibleWords) : null;
+                const worstLabel = worstCase !== null ? ` <span style="color:#888;font-size:0.8em;">(max ${worstCase})</span>` : '';
                 return `
                 <div class="suggestion-item" data-word="${word}">
                     <span class="suggestion-word">${word}</span>
-                    <span class="suggestion-score">${bits} bits</span>
+                    <span class="suggestion-score">${bits} bits${worstLabel}</span>
                 </div>`;
             }).join('');
             
@@ -715,15 +717,23 @@
                 }
             }
 
-            // Minimax tiebreaker: penalize by worst-case bucket size.
-            // When entropy is equal, prefer words that guarantee the smallest
-            // maximum remaining pool (e.g. MERIT over INERT when both score 1.00 bit).
-            // We subtract a tiny fraction of the worst-case count so it only
-            // breaks ties without affecting the primary entropy ranking.
+            // Minimax tiebreaker: prefer words that minimize worst-case remaining pool.
+            // Scale: penalty is (worstCase-1)/total, max 0.5, so it never overrides
+            // a genuine entropy difference (which is always > 0.5 between distinct scores)
+            // but decisively breaks ties (e.g. INERT worst=3 vs MERIT worst=1).
             const worstCase = Math.max(...counts);
-            const worstCasePenalty = worstCase / (total * 1000);
+            const worstCasePenalty = (worstCase - 1) / (total * 2);
             
             return entropy * 100 - worstCasePenalty + (possibleWords.includes(word) ? 1 : 0);
+        }
+
+        function getWorstCase(word, possibleWords) {
+            const patternCounts = {};
+            for (let answer of possibleWords) {
+                const pattern = getPattern(word.toUpperCase(), answer.toUpperCase());
+                patternCounts[pattern] = (patternCounts[pattern] || 0) + 1;
+            }
+            return Math.max(...Object.values(patternCounts));
         }
 
         function getBestSuggestions(possibleWords, count = 5) {
