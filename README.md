@@ -1,1 +1,1 @@
-Application to help solve NYT Wodle
+Application to help solve NYT Wordle Game
