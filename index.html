@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Helper</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+        /* Fixed top: grid on left, reset button on right */
+        .board-container {
+            flex-shrink: 0;
+            background: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 6px 8px;
+            gap: 10px;
+        }
+
+        .board {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex: 1;
+        }
+
+        .reset-btn {
+            background: #6aaa64;
+            color: white;
+            border: none;
+            padding: 6px 0;
+            font-size: 0.78em;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            align-self: stretch;
+            width: 32px;
+            flex-shrink: 0;
+            -webkit-tap-highlight-color: transparent;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            white-space: nowrap;
+            letter-spacing: 0.05em;
+        }
+
+        .reset-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            align-self: stretch;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .last-updated {
+            font-size: 0.45em;
+            color: #aaa;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+            white-space: nowrap;
+            letter-spacing: 0.03em;
+            padding-bottom: 2px;
+        }
+
+        /* Scrollable bottom: keyboard + suggestions */
+        .scroll-panel {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 6px 0 16px;
+        }
+
+        .row {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .tile {
+            flex: 1;
+            aspect-ratio: 1 / 1;
+            max-width: 56px;
+            border: 2px solid #d3d6da;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            transition: transform 0.1s ease, border-color 0.1s ease;
+        }
+        
+        .tile.pop {
+            animation: pop 0.2s ease-out;
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(1); background-color: transparent; }
+            50% { transform: scale(1.25); background-color: #e8e8e8; border-color: #565758; }
+            100% { transform: scale(1); background-color: transparent; }
+        }
+
+        .tile.filled { border-color: #878a8c; }
+        .tile.absent { background: #787c7e; border-color: #787c7e; color: white; }
+        .tile.present { background: #c9b458; border-color: #c9b458; color: white; }
+        .tile.correct { background: #6aaa64; border-color: #6aaa64; color: white; }
+
+        .keyboard {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 8px;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .key {
+            height: 48px;
+            min-width: 26px;
+            padding: 0 6px;
+            background: #d3d6da;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            transition: transform 0.1s ease, background-color 0.1s ease;
+        }
+        
+        .key.pressed {
+            animation: keyPress 0.15s ease-out;
+        }
+        
+        @keyframes keyPress {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.92); background-color: #a8a8a8; }
+            100% { transform: scale(1); }
+        }
+
+        .key.wide { min-width: 50px; font-size: 0.65em; }
+        .key.absent { background: #787c7e; color: white; }
+        .key.present { background: #c9b458; color: white; }
+        .key.correct { background: #6aaa64; color: white; }
+
+        .suggestions {
+            background: #f6f7f8;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px auto;
+            width: calc(100% - 10px);
+            max-width: 500px;
+            display: none;
+        }
+
+        .suggestions.show { display: block; }
+
+        .suggestions h2 {
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        #suggestionsList {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .suggestion-item {
+            background: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #d3d6da;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+        
+        .suggestion-item:active { background: #e8e8e8; transform: scale(0.98); }
+        .suggestion-word { font-size: 0.95em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+        .suggestion-score { font-size: 0.7em; color: #787c7e; }
+
+        .remaining-count {
+            text-align: center;
+            color: #787c7e;
+            font-size: 0.7em;
+            margin-top: 6px;
+        }
+
+
+
+        .possible-solutions {
+            margin-top: 12px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 10px;
+        }
+
+        .possible-solutions h2 {
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            color: #000;
+            font-weight: 600;
+        }
+
+        .solutions-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .solution-word {
+            background: #fff;
+            border: 1px solid #d3d6da;
+            border-radius: 4px;
+            padding: 5px 8px;
+            font-size: 0.85em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .solution-word:active { background: #e8e8e8; }
+
+        #debugOutput { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="board-container">
+        <div class="board" id="board"></div>
+        <div class="reset-col">
+            <button class="reset-btn" id="resetBtn">Reset Puzzle</button>
+            <span class="last-updated">Updated 04/25/26 11:37am</span>
+        </div>
+    </div>
+
+    <div class="scroll-panel">
+        <div class="keyboard-container">
+            <div class="keyboard" id="keyboard">
+                <div class="keyboard-row">
+                    <button class="key" data-key="Q">Q</button>
+                    <button class="key" data-key="W">W</button>
+                    <button class="key" data-key="E">E</button>
+                    <button class="key" data-key="R">R</button>
+                    <button class="key" data-key="T">T</button>
+                    <button class="key" data-key="Y">Y</button>
+                    <button class="key" data-key="U">U</button>
+                    <button class="key" data-key="I">I</button>
+                    <button class="key" data-key="O">O</button>
+                    <button class="key" data-key="P">P</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key" data-key="A">A</button>
+                    <button class="key" data-key="S">S</button>
+                    <button class="key" data-key="D">D</button>
+                    <button class="key" data-key="F">F</button>
+                    <button class="key" data-key="G">G</button>
+                    <button class="key" data-key="H">H</button>
+                    <button class="key" data-key="J">J</button>
+                    <button class="key" data-key="K">K</button>
+                    <button class="key" data-key="L">L</button>
+                </div>
+                <div class="keyboard-row">
+                    <button class="key wide" data-key="ENTER">ENTER</button>
+                    <button class="key" data-key="Z">Z</button>
+                    <button class="key" data-key="X">X</button>
+                    <button class="key" data-key="C">C</button>
+                    <button class="key" data-key="V">V</button>
+                    <button class="key" data-key="B">B</button>
+                    <button class="key" data-key="N">N</button>
+                    <button class="key" data-key="M">M</button>
+                    <button class="key wide" data-key="BACKSPACE">⌫</button>
+                </div>
+            </div>
+
+            <div class="suggestions" id="suggestions">
+                <h2>Best Next Guesses:</h2>
+                <div id="suggestionsList"></div>
+                <div class="remaining-count" id="remainingCount"></div>
+                <div class="possible-solutions" id="possibleSolutions" style="display:none;">
+                    <h2>Possible Solutions:</h2>
+                    <div class="solutions-grid" id="solutionsList"></div>
+                </div>
+            </div>
+            
+            <div id="debugOutput"></div>
+        </div>
+    </div><!-- end scroll-panel -->
+
+    <script>
+        // Single unified word list — used for both filtering possible answers
+        // and generating optimal probe suggestions.
+        // ~3899 common 5-letter English words, cleaned of proper nouns.
+        // Word lists are loaded from external files for easy maintenance.
+        // To add/remove words, edit answers.txt or guesses.txt directly on GitHub.
+        let ANSWERS = new Set();
+        let GUESSES = new Set();
+        let GUESSES_ARR = [];
+
+        async function loadWordLists() {
+            try {
+                const [answersRes, guessesRes] = await Promise.all([
+                    fetch('answers.txt'),
+                    fetch('guesses.txt')
+                ]);
+                const answersText = await answersRes.text();
+                const guessesText = await guessesRes.text();
+
+                ANSWERS = new Set(answersText.trim().split('\n').map(w => w.trim()).filter(w => w.length === 5));
+                GUESSES = new Set(guessesText.trim().split('\n').map(w => w.trim()).filter(w => w.length === 5));
+                GUESSES_ARR = [...GUESSES];
+
+                console.log(`Loaded ${ANSWERS.size} answers, ${GUESSES.size} guesses`);
+            } catch (e) {
+                console.error('Failed to load word lists:', e);
+                alert('Could not load word lists. Make sure answers.txt and guesses.txt are in the same folder.');
+            }
+        }
+        
+
+        let currentRow = 0;
+        let currentTile = 0;
+        let currentGuess = '';
+        let gameState = [];
+        let keyboardState = {};
+
+        const board = document.getElementById('board');
+        const keyboard = document.getElementById('keyboard');
+        const suggestions = document.getElementById('suggestions');
+        const suggestionsList = document.getElementById('suggestionsList');
+        const remainingCount = document.getElementById('remainingCount');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function initBoard() {
+            board.innerHTML = '';
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.dataset.row = i;
+                for (let j = 0; j < 5; j++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.dataset.row = i;
+                    tile.dataset.col = j;
+                    tile.addEventListener('click', handleTileClickDirect);
+                    tile.addEventListener('touchend', handleTileClickDirect);
+                    row.appendChild(tile);
+                }
+                board.appendChild(row);
+            }
+            
+            // Auto-fill SLATE as first word, all grey (absent)
+            const firstWord = 'SLATE';
+            for (let i = 0; i < firstWord.length; i++) {
+                const tile = document.querySelector(`.tile[data-row="0"][data-col="${i}"]`);
+                if (tile) {
+                    tile.textContent = firstWord[i];
+                    tile.classList.add('filled', 'absent');
+                }
+            }
+            currentGuess = firstWord;
+            currentTile = 5;
+            
+            // Submit with all-grey states — suggestions will show immediately
+            submitGuess();
+        }
+        
+        function handleTileClickDirect(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const tile = e.currentTarget;
+            const row = parseInt(tile.dataset.row);
+            const col = parseInt(tile.dataset.col);
+            if (gameState[row]) {
+                if (!tile.textContent && gameState[row].word[col]) {
+                    tile.textContent = gameState[row].word[col];
+                    tile.classList.add('filled', 'absent');
+                }
+                cycleTileState(tile, row, col);
+            }
+        }
+
+        keyboard.addEventListener('click', (e) => {
+            if (e.target.classList.contains('key')) {
+                const key = e.target.dataset.key;
+                e.target.classList.add('pressed');
+                setTimeout(() => e.target.classList.remove('pressed'), 150);
+                handleKeyPress(key);
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            const key = e.key.toUpperCase();
+            let keyToPress = null;
+            if (key === 'ENTER') keyToPress = 'ENTER';
+            else if (key === 'BACKSPACE') keyToPress = 'BACKSPACE';
+            else if (key.length === 1 && key.match(/[A-Z]/)) keyToPress = key;
+            
+            if (keyToPress) {
+                const keyElement = document.querySelector(`.key[data-key="${keyToPress}"]`);
+                if (keyElement) {
+                    keyElement.classList.add('pressed');
+                    setTimeout(() => keyElement.classList.remove('pressed'), 150);
+                }
+                handleKeyPress(keyToPress);
+            }
+        });
+
+        function handleTileClick(e) {
+            let target = e.target;
+            if (target.classList.contains('row')) return;
+            if (target.classList.contains('tile')) {
+                const row = parseInt(target.dataset.row);
+                const col = parseInt(target.dataset.col);
+                if (row < currentRow && target.textContent) {
+                    e.preventDefault();
+                    cycleTileState(target, row, col);
+                }
+            }
+        }
+        
+        board.addEventListener('click', handleTileClick);
+        board.addEventListener('touchend', handleTileClick);
+
+        function handleKeyPress(key) {
+            if (currentRow >= 6) return;
+            if (key === 'ENTER') {
+                if (currentTile === 5) submitGuess();
+            } else if (key === 'BACKSPACE') {
+                if (currentTile > 0) {
+                    currentTile--;
+                    const tile = document.querySelector(`.tile[data-row="${currentRow}"][data-col="${currentTile}"]`);
+                    if (tile) {
+                        tile.textContent = '';
+                        tile.classList.remove('filled', 'absent');
+                        currentGuess = currentGuess.slice(0, -1);
+                    }
+                }
+            } else if (currentTile < 5) {
+                const tile = document.querySelector(`.tile[data-row="${currentRow}"][data-col="${currentTile}"]`);
+                if (tile) {
+                    tile.textContent = key;
+                    tile.classList.add('filled', 'absent');
+                    tile.classList.add('pop');
+                    setTimeout(() => tile.classList.remove('pop'), 200);
+                    currentGuess += key;
+                    currentTile++;
+                }
+            }
+        }
+
+        function cycleTileState(tile, row, col) {
+            tile.style.transform = 'scale(1.2)';
+            setTimeout(() => { tile.style.transform = 'scale(1)'; }, 200);
+            
+            const states = ['absent', 'present', 'correct'];
+            let currentState = states.findIndex(s => tile.classList.contains(s));
+            if (currentState === -1) currentState = 0;
+            const nextState = (currentState + 1) % 3;
+            
+            tile.classList.remove(...states);
+            tile.classList.add(states[nextState]);
+            
+            if (gameState[row]) {
+                gameState[row].states[col] = states[nextState];
+            }
+            
+            updateKeyboardColors();
+            calculateSuggestions();
+        }
+
+        function submitGuess() {
+            if (currentGuess.length !== 5) return;
+
+            const rowTiles = document.querySelectorAll(`.tile[data-row="${currentRow}"]`);
+            const states = Array.from(rowTiles).map(tile => {
+                if (tile.classList.contains('correct')) return 'correct';
+                if (tile.classList.contains('present')) return 'present';
+                return 'absent';
+            });
+
+            gameState.push({ word: currentGuess, states: states });
+            updateKeyboardColors();
+            currentRow++;
+            currentTile = 0;
+            currentGuess = '';
+            calculateSuggestions();
+        }
+
+        function updateKeyboardColors() {
+            document.querySelectorAll('.key').forEach(key => {
+                key.classList.remove('absent', 'present', 'correct');
+            });
+
+            const letterStates = {};
+            gameState.forEach(guess => {
+                guess.word.split('').forEach((letter, i) => {
+                    const state = guess.states[i];
+                    if (!letterStates[letter] || 
+                        (state === 'correct') || 
+                        (state === 'present' && letterStates[letter] === 'absent')) {
+                        letterStates[letter] = state;
+                    }
+                });
+            });
+
+            Object.entries(letterStates).forEach(([letter, state]) => {
+                const key = document.querySelector(`.key[data-key="${letter}"]`);
+                if (key) key.classList.add(state);
+            });
+        }
+
+        function calculateSuggestions() {
+            // Always calculate - SLATE is pre-loaded so gameState always has at least one entry
+            if (gameState.length === 0) {
+                suggestions.classList.remove('show');
+                return;
+            }
+
+            // Filter ANSWERS pool — only valid solutions count as remaining possibilities
+            const possibleWords = filterWords([...ANSWERS], gameState);
+
+            if (possibleWords.length === 0) {
+                suggestionsList.innerHTML = '<div class="suggestion-item"><span style="color: #787c7e;">No matching words found. Check your letter colors.</span></div>';
+                remainingCount.textContent = '';
+                suggestions.classList.add('show');
+                return;
+            }
+
+            const bestWords = getBestSuggestions(possibleWords);
+
+            suggestionsList.innerHTML = bestWords.map(({word, score}) => {
+                const bits = (score / 100).toFixed(2);
+                const worstCase = possibleWords.length <= 20 ? getWorstCase(word, possibleWords) : null;
+                const worstLabel = worstCase !== null ? ` <span style="color:#888;font-size:0.8em;">(max ${worstCase})</span>` : '';
+                return `
+                <div class="suggestion-item" data-word="${word}">
+                    <span class="suggestion-word">${word}</span>
+                    <span class="suggestion-score">${bits} bits${worstLabel}</span>
+                </div>`;
+            }).join('');
+            
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                const word = item.dataset.word;
+                if (word) {
+                    item.addEventListener('click', () => {
+                        for (let i = 0; i < currentTile; i++) {
+                            const tile = document.querySelector(`.tile[data-row="${currentRow}"][data-col="${i}"]`);
+                            if (tile) { tile.textContent = ''; tile.classList.remove('filled', 'absent'); }
+                        }
+                        currentGuess = '';
+                        currentTile = 0;
+                        for (let letter of word.toUpperCase()) handleKeyPress(letter);
+                        if (currentTile === 5) submitGuess();
+                    });
+                }
+            });
+
+            remainingCount.textContent = `${possibleWords.length} possible word${possibleWords.length === 1 ? '' : 's'} remaining`;
+            suggestions.classList.add('show');
+
+            // Show all possible solutions below the top 5
+            const possibleSolutions = document.getElementById('possibleSolutions');
+            const solutionsList = document.getElementById('solutionsList');
+            if (possibleWords.length > 0) {
+                solutionsList.innerHTML = possibleWords.sort().map(word => 
+                    `<span class="solution-word" data-word="${word}">${word}</span>`
+                ).join('');
+                solutionsList.querySelectorAll('.solution-word').forEach(item => {
+                    item.addEventListener('click', () => {
+                        for (let i = 0; i < currentTile; i++) {
+                            const tile = document.querySelector(`.tile[data-row="${currentRow}"][data-col="${i}"]`);
+                            if (tile) { tile.textContent = ''; tile.classList.remove('filled', 'absent'); }
+                        }
+                        currentGuess = '';
+                        currentTile = 0;
+                        for (let letter of item.dataset.word.toUpperCase()) handleKeyPress(letter);
+                        if (currentTile === 5) submitGuess();
+                    });
+                });
+                possibleSolutions.style.display = 'block';
+            } else {
+                possibleSolutions.style.display = 'none';
+            }
+        }
+
+        function filterWords(words, guesses) {
+            return words.filter(word => {
+                const wordUpper = word.toUpperCase();
+                
+                for (let guess of guesses) {
+                    const letters = guess.word.toUpperCase();
+                    const states = guess.states;
+
+                    // 1. CORRECT: letter must be at this exact position
+                    for (let i = 0; i < 5; i++) {
+                        if (states[i] === 'correct') {
+                            if (wordUpper[i] !== letters[i]) return false;
+                        }
+                    }
+                    
+                    // 2. PRESENT: letter must exist in word, but NOT at this position
+                    for (let i = 0; i < 5; i++) {
+                        if (states[i] === 'present') {
+                            if (wordUpper[i] === letters[i]) return false;
+                            if (!wordUpper.includes(letters[i])) return false;
+                        }
+                    }
+                    
+                    // 3. ABSENT: enforce count ceiling AND block the specific position
+                    for (let i = 0; i < 5; i++) {
+                        if (states[i] === 'absent') {
+                            const letter = letters[i];
+
+                            // FIX: Even if the letter appears elsewhere (green/yellow),
+                            // it must NOT appear at this specific absent position
+                            if (wordUpper[i] === letter) return false;
+
+                            // Count how many times this letter is green or yellow in this guess
+                            const knownCount = states.filter((s, j) =>
+                                letters[j] === letter && (s === 'correct' || s === 'present')
+                            ).length;
+
+                            const wordCount = wordUpper.split('').filter(l => l === letter).length;
+
+                            if (knownCount === 0) {
+                                // Letter doesn't exist in word at all
+                                if (wordCount > 0) return false;
+                            } else {
+                                // Word must have EXACTLY knownCount of this letter (no more)
+                                if (wordCount > knownCount) return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            });
+        }
+
+        function getPattern(guess, answer) {
+            const pattern = ['absent', 'absent', 'absent', 'absent', 'absent'];
+            const answerLetters = answer.split('');
+            const guessLetters = guess.split('');
+            
+            for (let i = 0; i < 5; i++) {
+                if (guessLetters[i] === answerLetters[i]) {
+                    pattern[i] = 'correct';
+                    answerLetters[i] = null;
+                }
+            }
+            for (let i = 0; i < 5; i++) {
+                if (pattern[i] === 'absent' && answerLetters.includes(guessLetters[i])) {
+                    pattern[i] = 'present';
+                    answerLetters[answerLetters.indexOf(guessLetters[i])] = null;
+                }
+            }
+            return pattern.join(',');
+        }
+
+        function scoreWord(word, possibleWords) {
+            if (possibleWords.length <= 2) {
+                return possibleWords.includes(word) ? 1000 : 0;
+            }
+            
+            const patternCounts = {};
+            for (let answer of possibleWords) {
+                const pattern = getPattern(word.toUpperCase(), answer.toUpperCase());
+                patternCounts[pattern] = (patternCounts[pattern] || 0) + 1;
+            }
+            
+            let entropy = 0;
+            const total = possibleWords.length;
+            const counts = Object.values(patternCounts);
+            for (let count of counts) {
+                if (count > 0) {
+                    const probability = count / total;
+                    entropy -= probability * Math.log2(probability);
+                }
+            }
+
+            // Minimax tiebreaker: prefer words that minimize worst-case remaining pool.
+            // Scale: penalty is (worstCase-1)/total, max 0.5, so it never overrides
+            // a genuine entropy difference (which is always > 0.5 between distinct scores)
+            // but decisively breaks ties (e.g. INERT worst=3 vs MERIT worst=1).
+            const worstCase = Math.max(...counts);
+            const worstCasePenalty = (worstCase - 1) / (total * 2);
+            
+            return entropy * 100 - worstCasePenalty + (possibleWords.includes(word) ? 1 : 0);
+        }
+
+        function getWorstCase(word, possibleWords) {
+            const patternCounts = {};
+            for (let answer of possibleWords) {
+                const pattern = getPattern(word.toUpperCase(), answer.toUpperCase());
+                patternCounts[pattern] = (patternCounts[pattern] || 0) + 1;
+            }
+            return Math.max(...Object.values(patternCounts));
+        }
+
+        function getBestSuggestions(possibleWords, count = 5) {
+            if (possibleWords.length <= count) {
+                return possibleWords.map(word => ({ word, score: 100 }));
+            }
+            
+            let wordsToTest;
+            if (possibleWords.length === ANSWERS.size) {
+                const optimalStarters = ['soare','roate','raise','raile','salet','reast','slate','crate','trace','crane','stare','arise','irate','arose','stale'];
+                wordsToTest = [...optimalStarters.filter(w => GUESSES_ARR.includes(w)), ...possibleWords.slice(0, 30)];
+            } else if (possibleWords.length > 400) {
+                wordsToTest = [...new Set([...GUESSES_ARR.slice(0, 500), ...possibleWords])];
+            } else if (possibleWords.length > 100) {
+                wordsToTest = [...new Set([...GUESSES_ARR.slice(0, 800), ...possibleWords])];
+            } else if (possibleWords.length > 30) {
+                wordsToTest = [...new Set([...GUESSES_ARR.slice(0, 1000), ...possibleWords])];
+            } else if (possibleWords.length > 10) {
+                wordsToTest = [...new Set([...GUESSES_ARR.slice(0, 600), ...possibleWords])];
+            } else {
+                wordsToTest = [...new Set([...GUESSES_ARR, ...possibleWords])];
+            }
+            
+            const scored = wordsToTest.map(word => ({ word, score: scoreWord(word, possibleWords) }));
+            scored.sort((a, b) => b.score - a.score);
+            return scored.slice(0, count);
+        }
+
+        resetBtn.addEventListener('click', () => {
+            currentRow = 0;
+            currentTile = 0;
+            currentGuess = '';
+            gameState = [];
+            keyboardState = {};
+            // Reset keyboard and suggestions BEFORE initBoard so SLATE's grey renders correctly
+            document.querySelectorAll('.key').forEach(key => key.classList.remove('absent', 'present', 'correct'));
+            suggestions.classList.remove('show');
+            // initBoard auto-fills SLATE all-grey, submits it, and shows suggestions
+            initBoard();
+        });
+
+        async function init() {
+            await loadWordLists();
+            initBoard();
+        }
+        init();
+    </script>
+</body>
+</html>
