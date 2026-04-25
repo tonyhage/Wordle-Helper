@@ -269,7 +269,7 @@
         <div class="board" id="board"></div>
         <div class="reset-col">
             <button class="reset-btn" id="resetBtn">Reset Puzzle</button>
-            <span class="last-updated">Updated 04/11/26 02:05pm</span>
+            <span class="last-updated">Updated 04/25/26 11:15am</span>
         </div>
     </div>
 
@@ -707,14 +707,23 @@
             
             let entropy = 0;
             const total = possibleWords.length;
-            for (let count of Object.values(patternCounts)) {
+            const counts = Object.values(patternCounts);
+            for (let count of counts) {
                 if (count > 0) {
                     const probability = count / total;
                     entropy -= probability * Math.log2(probability);
                 }
             }
+
+            // Minimax tiebreaker: penalize by worst-case bucket size.
+            // When entropy is equal, prefer words that guarantee the smallest
+            // maximum remaining pool (e.g. MERIT over INERT when both score 1.00 bit).
+            // We subtract a tiny fraction of the worst-case count so it only
+            // breaks ties without affecting the primary entropy ranking.
+            const worstCase = Math.max(...counts);
+            const worstCasePenalty = worstCase / (total * 1000);
             
-            return entropy * 100 + (possibleWords.includes(word) ? 1 : 0);
+            return entropy * 100 - worstCasePenalty + (possibleWords.includes(word) ? 1 : 0);
         }
 
         function getBestSuggestions(possibleWords, count = 5) {
