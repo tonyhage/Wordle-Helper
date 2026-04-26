@@ -806,12 +806,14 @@ doses
 doted
 doubt
 dough
+douse
 doves
 dowdy
 dowel
 downs
 downy
 dowry
+dowse
 doyle
 dozed
 dozen
@@ -1138,6 +1140,7 @@ fresh
 friar
 fried
 frill
+frise
 frisk
 frizz
 frock
@@ -1250,6 +1253,7 @@ goopy
 goose
 gored
 gorge
+gorse
 gouge
 gough
 gould
@@ -2177,6 +2181,7 @@ primp
 print
 prion
 prior
+prise
 prism
 privy
 prize
@@ -2465,6 +2470,7 @@ screw
 scrub
 scrum
 scuba
+scull
 seats
 sects
 sedan
@@ -2520,6 +2526,7 @@ shelf
 shell
 shied
 shift
+shill
 shine
 shiny
 shire
@@ -3085,6 +3092,7 @@ unity
 unlit
 unmet
 unpin
+unsee
 unset
 until
 unwed
