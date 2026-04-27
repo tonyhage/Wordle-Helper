@@ -17,7 +17,9 @@ actor
 acute
 adage
 adapt
+adder
 adept
+adieu
 admin
 admit
 adobe
@@ -91,6 +93,7 @@ angry
 angst
 anime
 ankle
+annex
 annoy
 annul
 annum
@@ -136,6 +139,7 @@ atoll
 atone
 attic
 audit
+auger
 augur
 aunty
 autos
@@ -211,7 +215,10 @@ bendy
 beret
 berry
 berth
+beryl
 beset
+bevel
+bezel
 bible
 bicep
 biddy
@@ -304,6 +311,7 @@ brawl
 brawn
 bread
 break
+bream
 breed
 briar
 bribe
@@ -376,6 +384,7 @@ canoe
 canon
 caper
 carat
+carer
 carey
 cargo
 carob
@@ -534,6 +543,7 @@ credo
 creed
 creek
 creep
+crema
 creme
 crepe
 crept
@@ -581,7 +591,6 @@ curry
 curse
 curve
 curvy
-cuter
 cutie
 cyber
 cycle
@@ -596,9 +605,11 @@ datum
 daunt
 dealt
 death
+debar
 debit
 debug
 debut
+decaf
 decal
 decay
 decor
@@ -659,7 +670,6 @@ donny
 donor
 donut
 doozy
-doper
 dopey
 dorky
 doubt
@@ -687,7 +697,6 @@ dream
 drear
 dreck
 dress
-drier
 drift
 drill
 drink
@@ -732,6 +741,7 @@ eater
 ebony
 ebook
 eclat
+edema
 edger
 edict
 edify
@@ -762,6 +772,7 @@ emory
 empty
 enact
 endow
+enema
 enemy
 enjoy
 ennui
@@ -808,10 +819,12 @@ eying
 fable
 facet
 facto
+fader
 faint
 faire
 fairy
 faith
+faker
 false
 famer
 fancy
@@ -847,13 +860,13 @@ fiery
 fifth
 fifty
 fight
+filer
 filet
 filly
 filmy
 filth
 final
 finch
-finer
 first
 firth
 fishy
@@ -921,7 +934,6 @@ franz
 fraud
 freak
 freed
-freer
 fresh
 friar
 frill
@@ -953,6 +965,7 @@ fuzzy
 gable
 gaffe
 gamer
+gamey
 gamma
 gamut
 garde
@@ -965,6 +978,7 @@ gauze
 gauzy
 gavel
 gawky
+gazer
 gecko
 geeky
 geese
@@ -1114,6 +1128,7 @@ helix
 hella
 hello
 hence
+henna
 heron
 hertz
 hider
@@ -1130,6 +1145,7 @@ hobby
 hoist
 hokey
 hokum
+holey
 homer
 homey
 homie
@@ -1171,12 +1187,12 @@ hydro
 hyena
 hymen
 hyper
-icier
 icily
 icing
 ideal
 idiom
 idiot
+idler
 idyll
 igloo
 image
@@ -1187,6 +1203,7 @@ imply
 inane
 inapt
 inbox
+incel
 incur
 index
 indie
@@ -1211,6 +1228,7 @@ italy
 itchy
 ivied
 ivory
+jaded
 jaunt
 jazzy
 jelly
@@ -1230,6 +1248,7 @@ judge
 judgy
 juice
 juicy
+julep
 jumbo
 jumpy
 junky
@@ -1250,6 +1269,7 @@ knack
 knave
 knead
 kneel
+knell
 knelt
 knife
 knock
@@ -1259,6 +1279,8 @@ koala
 kooky
 krill
 kudzu
+kugel
+kvell
 label
 labor
 laden
@@ -1305,6 +1327,7 @@ level
 lever
 libel
 liege
+lifer
 light
 liken
 lilac
@@ -1318,6 +1341,7 @@ lippy
 liter
 lithe
 litre
+liven
 liver
 livid
 lizzy
@@ -1325,6 +1349,7 @@ llama
 loamy
 loath
 lobby
+lobed
 local
 locus
 lodge
@@ -1348,6 +1373,7 @@ lower
 lowly
 loyal
 lucid
+luger
 lumen
 lumpy
 lunar
@@ -1395,6 +1421,7 @@ match
 mater
 matey
 mauve
+maven
 maybe
 mayor
 mealy
@@ -1422,6 +1449,7 @@ micro
 midge
 midst
 might
+miler
 milky
 mimic
 mince
@@ -1510,9 +1538,7 @@ nerve
 nervy
 neuro
 never
-newer
 newly
-nicer
 niche
 niece
 nifty
@@ -1554,7 +1580,8 @@ oddly
 offal
 offer
 often
-older
+ogler
+oiler
 olive
 omega
 onion
@@ -1583,9 +1610,12 @@ owner
 oxbow
 oxide
 ozone
+pacer
 paddy
 padre
+paean
 pagan
+pager
 paine
 paint
 paleo
@@ -1599,6 +1629,7 @@ papal
 paper
 pappy
 parch
+parer
 parka
 parry
 parse
@@ -1612,6 +1643,7 @@ patio
 patsy
 patty
 pause
+paver
 payee
 payer
 peace
@@ -1754,7 +1786,6 @@ punny
 pupil
 puppy
 puree
-purer
 purge
 purse
 pushy
@@ -1789,6 +1820,7 @@ rabid
 racer
 radar
 radio
+rager
 rainy
 raise
 rajah
@@ -1800,18 +1832,19 @@ randy
 range
 ranis
 rapid
-rarer
 raspy
 ratio
 ratty
 ravel
 raven
+raver
 rayon
 razor
 reach
 react
 ready
 realm
+rebar
 rebel
 rebid
 rebut
@@ -1836,6 +1869,7 @@ reiki
 relax
 relay
 relic
+remap
 remit
 remix
 renal
@@ -1844,6 +1878,7 @@ repay
 repel
 reply
 repot
+reran
 rerun
 reset
 resin
@@ -1897,7 +1932,6 @@ rowdy
 rower
 royal
 ruddy
-ruder
 rugby
 ruing
 ruler
@@ -1925,7 +1959,6 @@ salve
 salvo
 samba
 sandy
-saner
 santo
 sappy
 sassy
@@ -2446,7 +2479,6 @@ trout
 trove
 truce
 truck
-truer
 truly
 trunk
 truss
@@ -2569,11 +2601,13 @@ vroom
 vying
 wacko
 wacky
+wader
 wafer
 wager
 wagon
 waist
 waive
+waken
 wally
 waltz
 warty
@@ -2597,6 +2631,7 @@ whale
 wharf
 wheat
 wheel
+whelk
 whelp
 where
 which
@@ -2620,6 +2655,7 @@ widow
 width
 wield
 wight
+wiled
 willy
 wimpy
 wince
@@ -2627,7 +2663,6 @@ winch
 windy
 winey
 wiper
-wiser
 witch
 witty
 woken
@@ -2669,6 +2704,8 @@ yappy
 yearn
 yeast
 yield
+yodel
+yokel
 young
 youth
 yucky
