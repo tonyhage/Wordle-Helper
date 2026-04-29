@@ -40,6 +40,7 @@ afoul
 after
 again
 agape
+agate
 agave
 agent
 agile
@@ -61,7 +62,6 @@ alert
 algae
 alias
 alibi
-alice
 alien
 align
 alike
@@ -2038,6 +2038,7 @@ opine
 opium
 opted
 optic
+orate
 orbed
 orbit
 order
@@ -2548,9 +2549,13 @@ scram
 scrap
 scree
 screw
+scrim
+scrip
+scrod
 scrub
 scrum
 scuba
+scuff
 scull
 seats
 sects
@@ -2722,7 +2727,7 @@ smock
 smoke
 smoky
 smote
-smurf
+smush
 smyth
 snack
 snail
@@ -2736,6 +2741,7 @@ sneer
 snide
 sniff
 snipe
+snoop
 snore
 snort
 snout
@@ -2754,10 +2760,12 @@ songs
 sonic
 sooth
 sooty
+soppy
 sorry
 souls
 sound
 soups
+soupy
 south
 sower
 space
@@ -2780,6 +2788,7 @@ spice
 spicy
 spied
 spiel
+spiff
 spike
 spiky
 spill
@@ -2790,7 +2799,6 @@ spire
 spite
 splat
 split
-spock
 spoil
 spoke
 spoof
@@ -2798,6 +2806,7 @@ spook
 spool
 spoon
 spore
+spork
 sport
 spots
 spout
@@ -2810,6 +2819,7 @@ spurn
 spurt
 squad
 squat
+squib
 squid
 stabs
 stack
@@ -2893,8 +2903,8 @@ suits
 sulky
 sully
 sumac
-sunni
 sunny
+sunup
 super
 surer
 surge
@@ -2921,13 +2931,13 @@ swing
 swipe
 swirl
 swish
-swiss
 swoon
 swoop
 sword
 swore
 sworn
 swung
+synch
 synod
 synth
 syrup
